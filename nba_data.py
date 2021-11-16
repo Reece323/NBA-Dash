@@ -60,15 +60,15 @@ team_colors = {
     "Washington Wizards": ["#002B5C", "#e31837", "#C4CED4"]
     }
 
-table_cols = ['Rank', 'Team', 'Record', 'Win %', 'Games Back', 'at Home', 'Away', 'vs. Division',  
-                    'PPG', 'Opponent PPG', 'Difference', 'Current Streak', 'Last 10 Games']
+table_cols = ['Rk', 'Team', 'Record', 'PCT', 'GB', 'Home', 'Away', 'Div',  
+                    'PPG', 'Opp PPG', 'Diff', 'Strk', 'Last 10']
 
 def conf_table_cols(conference):
     if conference == 'League':
         conference = 'Conference'
 
     cols = table_cols[:]
-    cols.insert(8, f'vs. {conference}')
+    cols.insert(8, f'{conference}')
     
     return cols
 
@@ -137,13 +137,13 @@ def scatter_data(season):
     html = requests.get(f'http://www.basketball-reference.com/leagues/NBA_{int(season) + 1}.html').content
     time.sleep(1)
     cleaned_soup = BeautifulSoup(re.sub(rb"<!--|-->",rb"", html), features='lxml')
-    misc_table = cleaned_soup.find('table', {'id':'misc_stats'})
+    misc_table = cleaned_soup.find('table', {'id':'advanced-team'})
 
     df = pd.read_html(str(misc_table))[0]
     df.columns = df.columns.get_level_values(1)
     df['Team'] = df['Team'].apply(lambda x: x if x[-1] != '*' else x[:-1])
 
-    df = df.drop(['Rk', 'Arena'], axis=1).copy()
+    df = df.drop(['Rk', 'Arena', 'Unnamed: 27_level_1', 'Unnamed: 17_level_1', 'Unnamed: 22_level_1'], axis=1).copy()
 
     df.columns = scatter_vals
     
@@ -151,7 +151,6 @@ def scatter_data(season):
     df[['Wins', 'Losses']] = df[['Wins', 'Losses']].astype(int)
 
     return df
-
 
 #%%
 

@@ -1,8 +1,16 @@
 import copy
 from nba_data import team_colors, table_cols
 
+#font-family: 'Architects Daughter', cursive;
 
-center_style = {'textAlign': 'center'}
+center_style = {'textAlign': 'center',
+                'margin-top': '3rem',
+                'margin-bottom': '0rem'}
+
+center_style2 = {'textAlign': 'center',
+                'margin-top': '0rem',
+                'margin-bottom': '0rem',
+                'fontSize': '.8rem',}
 
 table_params = dict(
     style_table = {
@@ -13,10 +21,12 @@ table_params = dict(
     style_header = {
         'backgroundColor': '#D3D3D3',
         'fontWeight': 'bold',
+        'fontSize': '.7rem',
         'border': '1px solid black'
     },
     style_cell = {
         'font-family':'sans-serif',
+        'fontSize': '.8rem',
         'backgroundColor': '#E6E6E6',
         'textAlign': 'center'
     },
@@ -30,8 +40,9 @@ table_params = dict(
             'filter_query': '{Team} contains "' + team + '"'
         },
         'backgroundColor': background_color,
-        'border': '2px solid ' + trim_color,
-        'color': 'white'
+        'border': '.01px solid ' + trim_color,
+        'color': 'white',
+        'fontSize': '.8rem',
     } for team, background_color, trim_color in zip(team_colors.keys(), 
     [team_colors[d][0] for d in team_colors], 
     [team_colors[d][1] for d in team_colors])] + [{
