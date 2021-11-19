@@ -7,3 +7,4 @@ venv
 .env
 app_drafts.py
 *.sh
+pages/test.py
