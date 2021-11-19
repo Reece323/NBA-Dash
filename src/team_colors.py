@@ -1,9 +1,10 @@
+import os
+import re
+import time
+
 import numpy as np
 import pandas as pd
 import requests
-import re
-import time
-import os
 from bs4 import BeautifulSoup
 from nba_api.stats.endpoints import leaguestandings
 
@@ -59,98 +60,3 @@ team_colors = {
     "Utah Jazz": ["#002B5C", "#F9A01B", "#F9A01B", "#00471B", "#3E2680", "#6CAEDF", "#753BBD", "#00A9E0", "#006272", "#954E4C"], 
     "Washington Wizards": ["#002B5C", "#e31837", "#C4CED4"]
     }
-
-table_cols = ['Rk', 'Team', 'Record', 'PCT', 'GB', 'Home', 'Away', 'Div',  
-                    'PPG', 'Opp PPG', 'Diff', 'Strk', 'Last 10']
-
-def conf_table_cols(conference):
-    if conference == 'League':
-        conference = 'Conference'
-
-    cols = table_cols[:]
-    cols.insert(8, f'{conference}')
-    
-    return cols
-
-def conf_table_data(season, conference):
-    #! add in playoff string reading for previous years after this works for current year
-    url = f'https://www.espn.com/nba/standings/_/season/{int(season) + 1}'
-
-    if conference == 'League':
-        url += '/group/league'
-    
-    dfs = pd.read_html(url)
-    time.sleep(1)
-
-    flatten = lambda t: [item for sublist in t for item in sublist]
-    start_cols = ['Rank', 'Team', 'Record', 'PCT', 'GB', 'HOME', 'AWAY', 'DIV', 'CONF', 'PPG', 'OPP PPG',
-            'DIFF', 'STRK', 'L10']
-    
-    if conference == 'West':
-        val = 3
-    else:
-        val = 1
-
-    conf = dfs[val]
-
-    teams = pd.DataFrame([dfs[val - 1].columns.values.tolist()[0]] + flatten(dfs[val - 1].values.tolist()))
-    
-    def playoff_str(x):
-        if str(x)[5].isdigit() and str(x)[6].islower():
-            return str(x)[6:8]
-        elif str(x)[5].islower():
-            return str(x)[5:7]
-        else:
-            return ''
-
-    playoff_str_vals = teams.apply(playoff_str, axis=1)
-    teams = pd.DataFrame([item.split(' ')[-1] for sublist in teams.values for item in sublist])
-
-    teams = teams.replace({0:{i.split(' ')[-1]: i for i in list(team_colors.keys())}})
-    teams['t'] = playoff_str_vals
-    teams = teams.apply(lambda row: row[0] + ' -' + row['t'] if row['t'] != '' else row[0], axis=1)
-
-    conf['Team'] = teams.apply(lambda x: x[:-1] if x.endswith(' ') else x)
-    conf['PCT'] = round(conf['PCT'] * 100, 2).astype(str) + '%'
-    conf['Record'] = conf['W'].astype(str) + '-' + conf['L'].astype(str)
-    conf['Rank'] = range(1, len(conf) + 1)
-
-    for j in ['PPG', 'OPP PPG', 'DIFF']:
-        conf[j] = round(conf[j], 1)
-        conf[j] = conf[j].astype(str)
-    
-    conf = conf.reindex(columns=start_cols).copy()
-    conf.columns = conf_table_cols(conference)
-
-    return conf.copy()
-
-scatter_vals = ['Team', 'Average Age', 'Wins', 'Losses', 'Pythagorean Wins', 'Pythagorean Losses', 
-                'Margin of Victory', 'Strength of Schedule', 'Simple Rating System', 'Offensive Rating', 
-                'Defensive Rating', 'Net Rating', 'Pace', 'Free Throw Attempt Rate', '3 Point Attempt Rate', 
-                'True Shooting Percentage', 'Effective Field Goal Percentage', 'Turnover Percentage', 
-                'Offensive Rebound Percentage', 'Free Throws Per Field Goal Attempt', 
-                'Effective Field Goal Percentage Allowed', 'Opponent Turnover Percentage', 
-                'Defensive Rebound Pecentage', 'Opponent Free Throws Per Field Goal Attempt', 'Attendance', 
-                'Attendance Per Game']
-
-def scatter_data(season):
-    html = requests.get(f'http://www.basketball-reference.com/leagues/NBA_{int(season) + 1}.html').content
-    time.sleep(1)
-    cleaned_soup = BeautifulSoup(re.sub(rb"<!--|-->",rb"", html), features='lxml')
-    misc_table = cleaned_soup.find('table', {'id':'advanced-team'})
-
-    df = pd.read_html(str(misc_table))[0]
-    df.columns = df.columns.get_level_values(1)
-    df['Team'] = df['Team'].apply(lambda x: x if x[-1] != '*' else x[:-1])
-
-    df = df.drop(['Rk', 'Arena', 'Unnamed: 27_level_1', 'Unnamed: 17_level_1', 'Unnamed: 22_level_1'], axis=1).copy()
-
-    df.columns = scatter_vals
-    
-    df = df[df['Team'] != 'League Average']
-    df[['Wins', 'Losses']] = df[['Wins', 'Losses']].astype(int)
-
-    return df
-
-#%%
-

@@ -1,5 +1,7 @@
 import copy
-from nba_data import team_colors, table_cols
+
+from src.nba_data import table_cols
+from src.team_colors import team_colors
 
 #font-family: 'Architects Daughter', cursive;
 
@@ -21,13 +23,15 @@ table_params = dict(
     style_header = {
         'backgroundColor': '#D3D3D3',
         'fontWeight': 'bold',
-        'fontSize': '.7rem',
-        'border': '1px solid black'
+        'color': 'black',
+        'fontSize': '.75rem',
+        'border': '1px solid #119DFF'
     },
     style_cell = {
         'font-family':'sans-serif',
         'fontSize': '.8rem',
-        'backgroundColor': '#E6E6E6',
+        'color': 'white',
+        'backgroundColor': '#1267a3',
         'textAlign': 'center'
     },
     fixed_columns={
