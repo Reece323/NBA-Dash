@@ -45,40 +45,7 @@ layout = html.Div([
     ###Title####
     ############
     navbar,
-    
-    #####################
-    ###Season Dropdown###
-    #####################
-    
-    html.Div([
-        dcc.Dropdown(
-            id='season_val',
-            options=[{
-                'label': str(i) + "-" + str(i + 1)[2:] + ' Season',
-                'value': i
-            } for i in range(2012, 2022)],
-            value='2021'
-        )
-    ],
-        style={
-        'color': 'black',
-        'margin-top': '2rem',
-        'padding-left': '40%',
-        'padding-right': '40%',
-        'textAlign': 'center',
-        'fontSize': '1rem'
-    }),
 
-    dbc.Row(
-        html.H6(
-            children=f'Last Updated: {datetime.now().strftime("%-I:%M:%S %p")} CST',
-            style=center_style2
-        )
-    ),
-
-
-    html.Br(),
-    
     ##############################
     ###Western Conference Table###
     ##############################
@@ -86,7 +53,11 @@ layout = html.Div([
     dbc.Row(
         html.H2(
             children='Western Conference',
-            style=center_style
+            style={
+                'color':'white',
+                'textAlign': 'center',
+                'margin-top': '3rem',
+                'margin-bottom': '0rem'}
         )
     ),
     dbc.Row(
@@ -115,7 +86,11 @@ layout = html.Div([
     dbc.Row(
         html.H2(
             children='Eastern Conference',
-            style=center_style
+            style={
+                'color':'white',
+                'textAlign': 'center',
+                'margin-top': '3rem',
+                'margin-bottom': '0rem'}
         )
     ),
     dbc.Row(
@@ -144,19 +119,14 @@ layout = html.Div([
     dbc.Row(
         html.H2(
             children='League Statistics Comparison',
-            style=center_style
+            style={
+                'color':'white',
+                'textAlign': 'center',
+                'margin-top': '3rem',
+                'margin-bottom': '0rem'}
         )
     ),
-    dbc.Row(
-        children=[
-            html.H4('Choose two metrics to compare how the league stacks up!')],
-        style=center_style
-    ),
-    html.Center(
-        [dcc.Graph(id='scatter1')]
-    ),
-
-    html.Br(), 
+    html.Br(),
 
     html.Div([
         dcc.Dropdown(
@@ -197,6 +167,10 @@ layout = html.Div([
             'textAlign': 'center'
     }),
 
+    html.Center(
+        [dcc.Graph(id='scatter1')]
+    ),
+
     ##########################
     ###Power Rankings Table###
     ##########################
@@ -204,7 +178,11 @@ layout = html.Div([
     dbc.Row(
         html.H2(
             children='Power Rankings',
-            style=center_style
+            style={
+                'color':'white',
+                'textAlign': 'center',
+                'margin-top': '3rem',
+                'margin-bottom': '0rem'}
         )
     ),
     dbc.Row(
@@ -222,8 +200,9 @@ layout = html.Div([
                 **table_params,
             )
         ])
-    ],  className='mx-5'
+    ],  className='mx-5 mb-5'
     ),
+    html.Br()
 ])
 
 ###############
@@ -286,9 +265,9 @@ def update_scatter1(season_val, x, y):
                 y=scatter_df[y],
                 mode='markers',
                 marker=dict(color=[team_colors[i][0] for i in playoff_splitter(scatter_df)],
-                            size=12,
+                            size=10,
                             line=dict(
-                    width=3,
+                    width=2,
                     color=[team_colors[i][1]
                             for i in playoff_splitter(scatter_df)]
                 )
@@ -301,8 +280,8 @@ def update_scatter1(season_val, x, y):
         ],
         'layout': go.Layout(
             plot_bgcolor='#8cd0ff',
-            height=750,
-            width=950,
+            height=600,
+            width=800,
             showlegend=False,
             xaxis=dict(
                 title=x,

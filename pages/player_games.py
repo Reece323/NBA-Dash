@@ -75,12 +75,12 @@ player_info_card = html.Div(
                 id="card-title-player-name",
                 className="card-title"
             ),
-            dcc.Markdown(
+            html.H6(dcc.Markdown(
                 children="",
                 id='player-text-info'
-            )
+            ))
         ],
-        width=6
+        width=4
         ),
     ], 
     justify="center"
@@ -102,19 +102,20 @@ seasons_stats = html.Div(
                     'minWidth': '40%'
                 },
                 style_header = {
-                    'backgroundColor': '#D3D3D3',
+                    'backgroundColor': 'rgba(0,0,150,.6)',
                     'fontWeight': 'bold',
-                    'color': 'black',
+                    'color': 'white',
                     'fontSize': '.75rem',
-                    'border': '1px solid #119DFF'
+                    'border': '1px solid rgba(0,0,60,.7)'
                 },
                 style_cell = {
                     'font-family':'sans-serif',
                     'fontSize': '.8rem',
                     'color': 'white',
-                    'backgroundColor': '#1267a3',
-                    'textAlign': 'center'
-                }
+                    'backgroundColor': 'rgba(0,0,80,.6)',
+                    'textAlign': 'center',
+                    'border': '1px solid rgba(0,0,220,.4)'
+                },
             ),
             label='Regular Season AVG Stats',
         ),
@@ -131,19 +132,20 @@ seasons_stats = html.Div(
                     'minWidth': '40%'
                 },
                 style_header = {
-                    'backgroundColor': '#D3D3D3',
+                    'backgroundColor': 'rgba(0,0,150,.6)',
                     'fontWeight': 'bold',
-                    'color': 'black',
+                    'color': 'white',
                     'fontSize': '.75rem',
-                    'border': '1px solid #119DFF'
+                    'border': '1px solid rgba(0,0,60,.7)'
                 },
                 style_cell = {
                     'font-family':'sans-serif',
                     'fontSize': '.8rem',
                     'color': 'white',
-                    'backgroundColor': '#1267a3',
-                    'textAlign': 'center'
-                }
+                    'backgroundColor': 'rgba(0,0,80,.6)',
+                    'textAlign': 'center',
+                    'border': '1px solid rgba(0,0,220,.4)'
+                },
             ),
             label='Playoff AVG Stats')
     ])
@@ -157,24 +159,25 @@ game_log_tabs = dbc.Tabs([
             data=[{}],
             columns=[],
             style_table = {
-                'overflowX': 'scroll',
-                'maxWidth': '100%',
-                'minWidth': '40%'
-            },
-            style_header = {
-                'backgroundColor': '#D3D3D3',
-                'fontWeight': 'bold',
-                'color': 'black',
-                'fontSize': '.75rem',
-                'border': '1px solid #119DFF'
-            },
-            style_cell = {
-                'font-family':'sans-serif',
-                'fontSize': '.8rem',
-                'color': 'white',
-                'backgroundColor': '#1267a3',
-                'textAlign': 'center'
-            },
+                    'overflowX': 'scroll',
+                    'maxWidth': '100%',
+                    'minWidth': '40%'
+                },
+                style_header = {
+                    'backgroundColor': 'rgba(0,0,150,.6)',
+                    'fontWeight': 'bold',
+                    'color': 'white',
+                    'fontSize': '.75rem',
+                    'border': '1px solid rgba(0,0,60,.7)'
+                },
+                style_cell = {
+                    'font-family':'sans-serif',
+                    'fontSize': '.8rem',
+                    'color': 'white',
+                    'backgroundColor': 'rgba(0,0,80,.6)',
+                    'textAlign': 'center',
+                    'border': '1px solid rgba(0,0,220,.4)'
+                },
             page_size=10
         )
     ],
@@ -186,24 +189,25 @@ game_log_tabs = dbc.Tabs([
             data=[{}],
             columns=[],
             style_table = {
-                'overflowX': 'scroll',
-                'maxWidth': '100%',
-                'minWidth': '40%'
-            },
-            style_header = {
-                'backgroundColor': '#D3D3D3',
-                'fontWeight': 'bold',
-                'color': 'black',
-                'fontSize': '.75rem',
-                'border': '1px solid #119DFF'
-            },
-            style_cell = {
-                'font-family':'sans-serif',
-                'fontSize': '.8rem',
-                'color': 'white',
-                'backgroundColor': '#1267a3',
-                'textAlign': 'center'
-            },
+                    'overflowX': 'scroll',
+                    'maxWidth': '100%',
+                    'minWidth': '40%'
+                },
+                style_header = {
+                    'backgroundColor': 'rgba(0,0,150,.6)',
+                    'fontWeight': 'bold',
+                    'color': 'white',
+                    'fontSize': '.75rem',
+                    'border': '1px solid rgba(0,0,60,.7)'
+                },
+                style_cell = {
+                    'font-family':'sans-serif',
+                    'fontSize': '.8rem',
+                    'color': 'white',
+                    'backgroundColor': 'rgba(0,0,80,.6)',
+                    'textAlign': 'center',
+                    'border': '1px solid rgba(0,0,220,.4)'
+                },
             page_size=10
         )
     ],
@@ -292,22 +296,29 @@ layout = html.Div([
 
         html.Center([
             # figure 1
-            dbc.Col(gen_figure_item(1), lg=8),
-
-            # # figure 2
-            # dbc.Col(gen_figure_item(2), width=4, lg=4),
-            # #
-            # # # figure 3
-            # dbc.Col(gen_figure_item(3), width=4, lg=4),
+            dbc.Col(
+                gen_figure_item(1),
+                lg=8
+            ),
         ]),
 
         html.Br(),
         
-        dbc.Row(dbc.Col(game_log_tabs, width=12))
+        dbc.Row(
+            dbc.Col(
+                game_log_tabs,
+                width=12
+            )
+        )
 
-    ], fluid=True)
+    ],
+    fluid=True)
 ])
 
+
+###############
+###Callbacks###
+###############
 
 @app.callback([
     Output(component_id='player-years-drop', component_property='options'),
@@ -320,6 +331,7 @@ layout = html.Div([
     Output(component_id='player-po-games-table', component_property='data')
 ],
     Input(component_id='player-id-drop', component_property='value'))
+
 def update_year_dropdown(player_id):
     global df_reg_s, df_po_s
     """
@@ -416,6 +428,7 @@ def update_game_log_tables(player_id, season):
               [Input(component_id='reg_s_game-logs-table', component_property='data'),
                Input(component_id='po_game-logs-table', component_property='data')],
               prevent_initial_call=True)
+
 def update_figure_data_dropdowns(_df1, _df2):
     """
     :param _df1: regular season DataFrame values
@@ -452,6 +465,7 @@ def update_figure_graph_dropdowns(fig_1_data): #, fig_2_data, fig_3_data
               [Input(f'fig-1-data-type', 'value'),
                Input(f'fig-1-fig-type', 'value')],
               prevent_initial_call=True)
+
 def update_fig_1(fig_dtype, fig_type):
     """
     :param fig_dtype:
@@ -468,47 +482,3 @@ def update_fig_1(fig_dtype, fig_type):
         return fig_func(df)
 
     return no_update
-
-
-# @app.callback(Output(f'fig-2', 'figure'),
-#               [Input(f'fig-2-data-type', 'value'),
-#                Input(f'fig-2-fig-type', 'value')],
-#               prevent_initial_call=True)
-# def update_fig_2(fig_dtype, fig_type):
-#     """
-#     :param fig_dtype:
-#     :param fig_type:
-#     :return:
-#     """
-#     if fig_dtype == 'Regular season':
-#         df = df_reg_games.copy()
-#     else:
-#         df = df_po_games.copy()
-
-#     if fig_type is not None:
-#         fig_func = fig_dict[fig_type]
-#         return fig_func(df)
-
-#     return no_update
-
-
-# @app.callback(Output(f'fig-3', 'figure'),
-#               [Input(f'fig-3-data-type', 'value'),
-#                Input(f'fig-3-fig-type', 'value')],
-#               prevent_initial_call=True)
-# def update_fig_3(fig_dtype, fig_type):
-#     """
-#     :param fig_dtype:
-#     :param fig_type:
-#     :return:
-#     """
-#     if fig_dtype == 'Regular season':
-#         df = df_reg_games.copy()
-#     else:
-#         df = df_po_games.copy()
-
-#     if fig_type is not None:
-#         fig_func = fig_dict[fig_type]
-#         return fig_func(df)
-
-#     return no_update

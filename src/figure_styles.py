@@ -5,14 +5,18 @@ from src.team_colors import team_colors
 
 #font-family: 'Architects Daughter', cursive;
 
-center_style = {'textAlign': 'center',
-                'margin-top': '3rem',
-                'margin-bottom': '0rem'}
+center_style = {
+    'textAlign': 'center',
+    'margin-top': '3rem',
+    'margin-bottom': '0rem'
+}
 
-center_style2 = {'textAlign': 'center',
-                'margin-top': '0rem',
-                'margin-bottom': '0rem',
-                'fontSize': '.8rem',}
+center_style2 = {
+    'textAlign': 'center',
+    'margin-top': '0rem',
+    'margin-bottom': '0rem',
+    'fontSize': '.8rem'
+}
 
 table_params = dict(
     style_table = {
@@ -21,24 +25,26 @@ table_params = dict(
         'minWidth': '40%'
     },
     style_header = {
-        'backgroundColor': '#D3D3D3',
+        'backgroundColor': 'rgba(0,0,150,.6)',
         'fontWeight': 'bold',
-        'color': 'black',
+        'color': 'white',
         'fontSize': '.75rem',
-        'border': '1px solid #119DFF'
+        'border': '1px solid rgba(0,0,60,.7)'
     },
     style_cell = {
         'font-family':'sans-serif',
         'fontSize': '.8rem',
         'color': 'white',
-        'backgroundColor': '#1267a3',
-        'textAlign': 'center'
+        'backgroundColor': 'rgba(0,0,80,.6)',
+        'textAlign': 'center',
+        'border': '1px solid rgba(0,0,220,.4)'
     },
     fixed_columns={
         'headers': True, 
         'data': 2
     },
-    style_data_conditional=[{
+    style_data_conditional=[
+    {
         'if': {
             'column_id': 'Team',
             'filter_query': '{Team} contains "' + team + '"'
@@ -56,13 +62,16 @@ table_params = dict(
         },
         'color': 'red'
     },
+    
     {
         'if': {
             'filter_query': '{Difference} > 0.0',
             'column_id': 'Difference'
         },
             'color': 'green'
-    }],
+    }
+    ],
+    
     style_cell_conditional=[{
         'if': {
             'column_id': 'Record'
